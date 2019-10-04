@@ -1,8 +1,8 @@
 import pandas as pd
+
 from utils import text_type, text_color
 
-
-df = pd.read_csv("city/output/list_of_countries.csv")
+df = pd.read_csv("scraper/scraped_data/countries.csv")
 
 
 def run_country_checker():

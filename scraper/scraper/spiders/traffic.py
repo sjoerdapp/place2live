@@ -1,12 +1,21 @@
 # TODO Add documentation to this module (traffic)
 from scrapy import Spider
 from scrapy.loader import ItemLoader
-from traffic_index.items import TrafficIndexItem
+
+from ..items import TrafficIndexItem
 
 
 class TrafficSpider(Spider):
     # TODO Add documentation for this class(TrafficSpider) and parse function
     name = "traffic"
+    custom_settings = {
+        'FEED_EXPORT_FIELDS': (
+            "world_rank",
+            "city",
+            "country",
+            "congestion_level",
+        )
+    }
     allowed_domains = ["tomtom.com"]
     start_urls = ["https://www.tomtom.com/en_gb/traffic-index/ranking/"]
 
