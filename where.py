@@ -5,6 +5,7 @@ from utils import text_type
 
 
 df = pd.read_csv("city/output/list_of_countries.csv")
+df_copy = df
 
 
 def run_country_checker():
@@ -35,7 +36,7 @@ YOUR_COUNTRY = run_country_checker()
 
 def max_min_index(name_index):
     """Return maximum and minimum value with country of a column from df."""
-    country_and_name = df[['country', name_index]]
+    country_and_name = df_copy[['country', name_index]]
     counrties_in_name_index = country_and_name.sort_values(name_index).dropna()
     min_value = [
         list(counrties_in_name_index[name_index])[0],
