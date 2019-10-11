@@ -132,7 +132,7 @@ def safety_func():
     print(
         text_color(
             f"In your country safety index is {country_safety_index} or "
-            f" crime Index is {round((100.0-country_safety_index), 2)}",
+            f" crime index is {round((100.0-country_safety_index), 2)}",
             text_type.ANSWER,
         ),
     )
