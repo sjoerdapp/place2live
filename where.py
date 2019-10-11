@@ -12,7 +12,7 @@ def get_closest_country(country_name: str):
     """This function finds the closest match for the country."""
     countries = df['country'].values.tolist()
     closest_match = difflib.get_close_matches(country_name, countries)
-    return closest_match
+    return str(closest_match).strip('[]').replace(',', ' or')
 
 
 def run_country_checker():
