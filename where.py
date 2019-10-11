@@ -2,9 +2,16 @@ import pandas as pd
 
 from utils import text_color
 from utils import text_type
-
+import difflib
 
 df = pd.read_csv("city/output/list_of_countries.csv")
+
+
+def get_closest_country(country_name: str):
+    """ This function fins the closest match for the country"""
+    countries = df['country'].values.tolist()
+    results = difflib.get_close_matches(country_name, countries)
+    return results
 
 
 def run_country_checker():
@@ -20,9 +27,11 @@ def run_country_checker():
             country = country.title()
             float(df[df.country == country]["purchasing_power_index"])
         except TypeError:
+            res = get_closest_country(country)
             print(
                     text_color(
-                        f"'{country}' is an invalid country. Please try again.",
+                        f"'{country}' is an invalid country or did you mean {res}"
+                        f". Please try again.",
                         text_type.WARNING,
                     ),
             )
@@ -121,7 +130,8 @@ def safety_func():
     )
     print(
         text_color(
-            f"In your country safety index is {country_safety_index}",
+            f"In your country safety index is {country_safety_index} or "
+            f" crime Index is {round((100.0-country_safety_index), 2)}",
             text_type.ANSWER,
         ),
     )
@@ -357,6 +367,7 @@ values = {
 df = df.fillna(value=values)
 
 if __name__ == "__main__":
+
     max_min_purchasing = max_min_index('purchasing_power_index')
     max_min_safety = max_min_index('safety_index')
     max_min_health = max_min_index('health_care_index')
