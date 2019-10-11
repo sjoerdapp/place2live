@@ -11,8 +11,8 @@ df = pd.read_csv("city/output/list_of_countries.csv")
 def get_closest_country(country_name: str):
     """This function finds the closest match for the country."""
     countries = df['country'].values.tolist()
-    results = difflib.get_close_matches(country_name, countries)
-    return results
+    closest_match = difflib.get_close_matches(country_name, countries)
+    return closest_match
 
 
 def run_country_checker():
@@ -28,14 +28,12 @@ def run_country_checker():
             country = country.title()
             float(df[df.country == country]["purchasing_power_index"])
         except TypeError:
-            res = get_closest_country(country)
-            print(
-                    text_color(
-                        f"'{country}' is an invalid country or did you mean {res}"
-                        f". Please try again.",
-                        text_type.WARNING,
-                    ),
-            )
+            ret = get_closest_country(country)
+            error_str = f"{country} is an invalid country or did you mean {ret}. Please try again."
+            if not ret:
+                error_str = f"{country} is an invalid country name. Please try again."
+
+            print(text_color(error_str, text_type.WARNING))
         else:
             return country
 
