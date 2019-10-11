@@ -1,5 +1,5 @@
-import pandas as pd
 import difflib
+import pandas as pd
 from utils import text_color
 from utils import text_type
 
@@ -7,7 +7,7 @@ df = pd.read_csv("city/output/list_of_countries.csv")
 
 
 def get_closest_country(country_name: str):
-    """ This function fins the closest match for the country"""
+    """ This function finds the closest match for the country"""
     countries = df['country'].values.tolist()
     results = difflib.get_close_matches(country_name, countries)
     return results
