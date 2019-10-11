@@ -1,5 +1,7 @@
 import difflib
+
 import pandas as pd
+
 from utils import text_color
 from utils import text_type
 
