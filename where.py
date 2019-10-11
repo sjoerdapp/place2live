@@ -1,8 +1,7 @@
 import pandas as pd
-
+import difflib
 from utils import text_color
 from utils import text_type
-import difflib
 
 df = pd.read_csv("city/output/list_of_countries.csv")
 
