@@ -3,10 +3,45 @@ import pandas as pd
 from utils import text_color
 from utils import text_type
 
+maxDiffCharTax = 1 / 2.325
 
 df = pd.read_csv("city/output/list_of_countries.csv")
 df_copy = df
 
+def isSimilarTo(reference, model):
+    reference = reference.replace(' ', '')
+    model =  model.replace(' ', '')
+    distance = damerau_levenshtein_distance(model, reference) / len(reference)
+    return distance <= maxDiffCharTax
+
+"""
+Compute the Damerau-Levenshtein distance between two given
+strings (s1 and s2)
+"""
+def damerau_levenshtein_distance(s1, s2):
+    d = {}
+    lenstr1 = len(s1)
+    lenstr2 = len(s2)
+    for i in range(-1,lenstr1+1):
+        d[(i,-1)] = i+1
+    for j in range(-1,lenstr2+1):
+        d[(-1,j)] = j+1
+
+    for i in range(lenstr1):
+        for j in range(lenstr2):
+            if s1[i] == s2[j]:
+                cost = 0
+            else:
+                cost = 1
+            d[(i,j)] = min(
+                           d[(i-1,j)] + 1, # deletion
+                           d[(i,j-1)] + 1, # insertion
+                           d[(i-1,j-1)] + cost, # substitution
+                          )
+            if i and j and s1[i]==s2[j-1] and s1[i-1] == s2[j]:
+                d[(i,j)] = min (d[(i,j)], d[i-2,j-2] + cost) # transposition
+
+    return d[lenstr1-1,lenstr2-1]
 
 def run_country_checker():
     """Checks for a valid country by checking df"""
@@ -21,18 +56,29 @@ def run_country_checker():
             country = country.title()
             float(df[df.country == country]["purchasing_power_index"])
         except TypeError:
-            print(
-                    text_color(
-                        f"'{country}' is an invalid country. Please try again.",
-                        text_type.WARNING,
-                    ),
-            )
+            similarCountries=[]
+            for i in range(len(df)):
+                if(isSimilarTo(df['country'][i], country)):
+                    similarCountries.append(df['country'][i])
+
+            if(len(similarCountries) == 0):
+                message = f"'{country} is an invalid country. Please try again."
+            else:
+                message = f"{country} is an invalid country. Did you mean "
+            
+            for i in range(len(similarCountries)):
+                message += f"{similarCountries[i]}"
+                if(i != len(similarCountries) - 1):
+                    message += " or "
+                else:
+                    message += "?"
+
+            print(text_color(message, text_type.WARNING))
         else:
             return country
 
 
 YOUR_COUNTRY = run_country_checker()
-
 
 def max_min_index(name_index):
     """Return maximum and minimum value with country of a column from df."""
