@@ -60,3 +60,10 @@ Instead of installing Python yourself, this script can also be run with Docker:
 docker build -t place2live .
 docker run -it place2live # Runs the container in interactive mode, so the script has access to stdin of the host machine
 ```
+
+## :raised_hand: Contributing
+
+Contributions are always welcomed. :smiley:
+Feel free to raise new issues, file new PRs and star and fork this repo! :wink:
+
+To follow the guidelines, refer to [Contributing.md](CONTRIBUTING.md)
