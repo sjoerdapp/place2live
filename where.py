@@ -1,4 +1,7 @@
+from datetime import datetime
+
 import pandas as pd
+import requests
 
 from utils import text_color
 from utils import text_type
@@ -32,6 +35,65 @@ def run_country_checker():
 
 
 YOUR_COUNTRY = run_country_checker()
+
+
+def run_age_checker():
+    """Take valid gender from user"""
+    while True:
+        try:
+            age = input(
+                text_color(
+                    "How old are you? ", text_type.QUESTION,
+                ),
+            )
+            int(age)
+        except ValueError:
+            print(
+                    text_color(
+                        f"'{age}' is an invalid Age. Please try again.",
+                        text_type.WARNING,
+                    ),
+            )
+        else:
+            return age
+
+
+YOUR_AGE = run_age_checker()
+
+
+def run_gender_checker():
+    """Take valid gender from user"""
+    while True:
+        try:
+            gender = input(
+                text_color(
+                    "What is your gender Male or Female? ", text_type.QUESTION,
+                ),
+            )
+            gender = gender.lower()
+            if gender not in ["male", "female"]:
+                raise ValueError
+        except ValueError:
+            print(
+                    text_color(
+                        f"'{gender}' is an invalid Gender. Please try again",
+                        text_type.WARNING,
+                    ),
+            )
+        else:
+            return gender
+
+
+YOUR_GENDER = run_gender_checker()
+
+
+def get_url(country, age, gender):
+    """Construct URL based on input"""
+    country = country.title()
+    date = datetime.today().strftime('%Y-%m-%d')
+    url_part1 = "https://d6wn6bmjj722w.cloudfront.net/1.0/life-expectancy/remaining/"
+    url_part2 = f"{gender}/{country}/{date}/{age}y/?format=json"
+    return url_part1 + url_part2
 
 
 def max_min_index(name_index):
@@ -396,6 +458,22 @@ if __name__ == "__main__":
         ["country", "freedomhouse_score", "quality_of_life_index"]
     ].dropna().sort_values(by=['freedomhouse_score'], ascending=False)
 
+    life_expectancy = []
+    error_contries = []
+    if not print_out_df.empty:
+        countries = list(print_out_df['country'])
+        for value in countries:
+            api_url = get_url(value, YOUR_AGE, YOUR_GENDER)
+            response = requests.get(api_url)
+            data = response.json()
+            try:
+                total_years = int(YOUR_AGE) + data['remaining_life_expectancy']
+                total_years = round(total_years, 2)
+                life_expectancy.append(total_years)
+            except KeyError:
+                error_contries.append(value)
+                life_expectancy.append(None)
+
     if print_out_df.empty:
         print(
             text_color(
@@ -404,5 +482,6 @@ if __name__ == "__main__":
             ),
         )
     else:
+        print_out_df['life expectancy'] = life_expectancy
         with pd.option_context("display.max_rows", None, "display.max_columns", None):
             print(text_color(print_out_df, text_type.ANSWER))
