@@ -2,8 +2,8 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
-
-from scrapy import Field, Item
+from scrapy import Field
+from scrapy import Item
 from scrapy.loader.processors import MapCompose
 
 
@@ -22,6 +22,7 @@ def parse_float(value):
 
 def strip_string(value):
     return value.strip()
+
 
 class InflationItem(Item):
     inflation = Field()

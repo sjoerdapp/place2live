@@ -1,3 +1,5 @@
+![Alt text](logo.jpg)
+
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/serhii73/place2live/graphs/commit-activity)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![made-with-python](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
@@ -58,3 +60,10 @@ Instead of installing Python yourself, this script can also be run with Docker:
 docker build -t place2live .
 docker run -it place2live # Runs the container in interactive mode, so the script has access to stdin of the host machine
 ```
+
+## :raised_hand: Contributing
+
+Contributions are always welcomed. :smiley:
+Feel free to raise new issues, file new PRs and star and fork this repo! :wink:
+
+To follow the guidelines, refer to [Contributing.md](CONTRIBUTING.md)
