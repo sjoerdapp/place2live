@@ -1,4 +1,7 @@
+import difflib
+
 from datetime import datetime
+
 
 import pandas as pd
 import requests
@@ -6,9 +9,15 @@ import requests
 from utils import text_color
 from utils import text_type
 
-
 df = pd.read_csv("city/output/list_of_countries.csv")
 df_copy = df
+
+
+def get_closest_country(country_name: str):
+    """This function finds the closest match for the country."""
+    countries = df['country'].values.tolist()
+    closest_match = difflib.get_close_matches(country_name, countries)
+    return str(closest_match).strip('[]').replace(',', ' or')
 
 
 def run_country_checker():
@@ -24,12 +33,12 @@ def run_country_checker():
             country = country.title()
             float(df[df.country == country]["purchasing_power_index"])
         except TypeError:
-            print(
-                    text_color(
-                        f"'{country}' is an invalid country. Please try again.",
-                        text_type.WARNING,
-                    ),
-            )
+            ret = get_closest_country(country)
+            error_str = f"{country} is an invalid country or did you mean {ret}. Please try again."
+            if not ret:
+                error_str = f"{country} is an invalid country name. Please try again."
+
+            print(text_color(error_str, text_type.WARNING))
         else:
             return country
 
@@ -184,7 +193,8 @@ def safety_func():
     )
     print(
         text_color(
-            f"In your country safety index is {country_safety_index}",
+            f"In your country safety index is {country_safety_index} or "
+            f" crime index is {round((100.0-country_safety_index), 2)}",
             text_type.ANSWER,
         ),
     )
@@ -420,6 +430,7 @@ values = {
 df = df.fillna(value=values)
 
 if __name__ == "__main__":
+
     max_min_purchasing = max_min_index('purchasing_power_index')
     max_min_safety = max_min_index('safety_index')
     max_min_health = max_min_index('health_care_index')
