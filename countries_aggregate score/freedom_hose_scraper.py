@@ -1,7 +1,8 @@
+import csv
 import re
+
 import requests
 from bs4 import BeautifulSoup
-import csv
 
 
 def get_row(country_link):
@@ -37,8 +38,10 @@ def get_countries():
     soup_object = BeautifulSoup(html_text, 'html.parser')
 
     # the first option not relevant
-    country_options = soup_object.find(id="table-ul-left-side").find("select").find_all('option')[1:]
-    country_links = [country_option.get('value') for country_option in country_options]
+    country_options = soup_object.find(
+        id="table-ul-left-side").find("select").find_all('option')[1:]
+    country_links = [country_option.get('value')
+                     for country_option in country_options]
     return country_links
 
 
