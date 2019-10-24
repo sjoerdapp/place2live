@@ -4,11 +4,9 @@ import dbm
 import difflib
 from datetime import datetime
 
-import pandas as pd
 import requests
-
-from utils import text_color
-from utils import text_type
+import pandas as pd
+from utils import text_color, text_type
 
 maxDiffCharTax = 1 / 2.325
 
