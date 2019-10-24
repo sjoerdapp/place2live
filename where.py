@@ -1,3 +1,4 @@
+import dbm
 import difflib
 from datetime import datetime
 
@@ -449,6 +450,19 @@ def pollution_func():
         )
 
 
+def cached_request(api_url):
+    """Checks if the data for the url is in the dbm cache and returns the result.
+    If not, requests it, stores in the database and returns."""
+
+    db = dbm.open('cache.dbm', 'c')
+    data = db.get(api_url, False)
+    if not data:
+        response = requests.get(api_url)
+        data = response.json()
+        db[api_url] = data
+    return data
+
+        
 values = {
     "purchasing_power_index": 200,
     "safety_index": 200,
@@ -503,8 +517,7 @@ if __name__ == "__main__":
         countries = list(print_out_df["country"])
         for value in countries:
             api_url = get_url(value, YOUR_AGE, YOUR_GENDER)
-            response = requests.get(api_url)
-            data = response.json()
+            data = cached_request(api_url)
             try:
                 total_years = int(YOUR_AGE) + data["remaining_life_expectancy"]
                 total_years = round(total_years, 2)
