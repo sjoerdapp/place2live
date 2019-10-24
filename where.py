@@ -1,13 +1,12 @@
 """ TODO: add a propper docstring here to stop the build error"""
-
 import dbm
 import difflib
 from datetime import datetime
 
-import requests
-
 import pandas as pd
-from utils import text_color, text_type
+import requests
+from utils import text_color
+from utils import text_type
 
 maxDiffCharTax = 1 / 2.325
 
