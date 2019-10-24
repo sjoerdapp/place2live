@@ -39,9 +39,12 @@ def get_countries():
 
     # the first option not relevant
     country_options = soup_object.find(
-        id="table-ul-left-side").find("select").find_all('option')[1:]
-    country_links = [country_option.get('value')
-                     for country_option in country_options]
+        id="table-ul-left-side",
+    ).find("select").find_all('option')[1:]
+    country_links = [
+        country_option.get('value')
+        for country_option in country_options
+    ]
     return country_links
 
 
