@@ -29,11 +29,13 @@ displacement_dict = {
     "Palestinian Territory": 10,
 }
 
+
 def isSimilarTo(reference, model):
     reference = reference.replace(' ', '')
-    model =  model.replace(' ', '')
+    model = model.replace(' ', '')
     distance = damerau_levenshtein_distance(model, reference) / len(reference)
     return distance <= maxDiffCharTax
+
 
 def damerau_levenshtein_distance(s1, s2):
     """ Compute the Damerau-Levenshtein distance between two given
@@ -53,12 +55,12 @@ def damerau_levenshtein_distance(s1, s2):
             else:
                 cost = 1
             d[(i, j)] = min(
-                           d[(i - 1, j)] + 1, # deletion
-                           d[(i, j - 1)] + 1, # insertion
-                           d[(i - 1, j - 1)] + cost, # substitution
+                           d[(i - 1, j)] + 1,  # deletion
+                           d[(i, j - 1)] + 1,  # insertion
+                           d[(i - 1, j - 1)] + cost,  # substitution
             )
             if i and j and s1[i] == s2[j - 1] and s1[i - 1] == s2[j]:
-                d[(i, j)] = min (d[(i, j)], d[i - 2, j - 2] + cost) # transposition
+                d[(i, j)] = min(d[(i, j)], d[i - 2, j - 2] + cost)  # transposition
 
     return d[lenstr1 - 1, lenstr2 - 1]
 
@@ -462,7 +464,7 @@ def cached_request(api_url):
         db[api_url] = data
     return data
 
-        
+
 values = {
     "purchasing_power_index": 200,
     "safety_index": 200,
