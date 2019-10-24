@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Define here the models for your scraped items
 #
 # See documentation in:
@@ -8,13 +7,14 @@ from scrapy import Field
 from scrapy import Item
 from scrapy.loader.processors import MapCompose
 from scrapy.loader.processors import TakeFirst
+from w3lib.html import remove_tags
 
 __author__ = "aserhii@protonmail.com"
 
 
 def filter_question(value):
     """"""
-    return value if value != '?' else None
+    return value if value != "?" else None
 
 
 class CountryItem(Item):
@@ -36,7 +36,7 @@ class CountryItem(Item):
 
 def parse_string(value):
     end = value.index("%")
-    return value[:end + 1]
+    return value[: end + 1]
 
 
 def strip_string(value):
