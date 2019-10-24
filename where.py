@@ -11,7 +11,17 @@ from utils import text_type
 
 df = pd.read_csv("city/output/list_of_countries.csv")
 df_copy = df
+df['notes'] = ""
 
+# Key: country, Value: rank
+displacement_dict = {"Cameroon": 1, "Congo": 2, "Burundi": 4, "Ukraine": 5, "Venezuela": 6,
+                    "Mali": 7, "Libya": 8, "Ethiopia": 9, "Palestinian Territory": 10}
+
+def displacement_col(dis_dict, df):
+    """This function build the notes column to add the country's rank in the negleted displacement crises"""
+    for key, value in dis_dict.items():
+        country_ind = df.index[df['country'] == key].tolist()[0]
+        df.at[country_ind, 'notes'] = "{} is ranked number {} among the world's most negeleged displacement crises".format(key, value)
 
 def get_closest_country(country_name: str):
     """This function finds the closest match for the country."""
