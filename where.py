@@ -3,9 +3,7 @@ from datetime import datetime
 
 import pandas as pd
 import requests
-
-from utils import text_color
-from utils import text_type
+from utils import text_color, text_type
 
 maxDiffCharTax = 1 / 2.325
 
