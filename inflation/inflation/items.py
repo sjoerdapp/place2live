@@ -2,8 +2,7 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
-from scrapy import Field
-from scrapy import Item
+from scrapy import Field, Item
 from scrapy.loader.processors import MapCompose
 
 

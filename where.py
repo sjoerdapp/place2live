@@ -35,8 +35,7 @@ def isSimilarTo(reference, model):
 
 
 def damerau_levenshtein_distance(s1, s2):
-    """ Compute the Damerau-Levenshtein distance between two given
-    strings (s1 and s2)"""
+    """Compute the Damerau-Levenshtein distance between two given strings (s1 and s2)"""
     d = {}
     lenstr1 = len(s1)
     lenstr2 = len(s2)
@@ -52,14 +51,15 @@ def damerau_levenshtein_distance(s1, s2):
             else:
                 cost = 1
             d[(i, j)] = min(
-                           d[(i - 1, j)] + 1,  # deletion
-                           d[(i, j - 1)] + 1,  # insertion
-                           d[(i - 1, j - 1)] + cost,  # substitution
+                d[(i - 1, j)] + 1,  # deletion
+                d[(i, j - 1)] + 1,  # insertion
+                d[(i - 1, j - 1)] + cost,  # substitution
             )
             if i and j and s1[i] == s2[j - 1] and s1[i - 1] == s2[j]:
                 d[(i, j)] = min(d[(i, j)], d[i - 2, j - 2] + cost)  # transposition
 
     return d[lenstr1 - 1, lenstr2 - 1]
+
 
 
 def displacement_col(dis_dict, df):

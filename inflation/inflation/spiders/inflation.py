@@ -1,10 +1,9 @@
 import re
 
 from bs4 import BeautifulSoup as bs
+from inflation.items import InflationItem
 from scrapy import Spider
 from scrapy.loader import ItemLoader
-
-from inflation.items import InflationItem
 
 
 class InflationSpider(Spider):
