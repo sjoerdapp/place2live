@@ -61,7 +61,6 @@ def damerau_levenshtein_distance(s1, s2):
     return d[lenstr1 - 1, lenstr2 - 1]
 
 
-
 def displacement_col(dis_dict, df):
     """This function build the notes column to add the country's rank in the negleted displacement crises"""
     for key, value in dis_dict.items():
