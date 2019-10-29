@@ -10,6 +10,7 @@ from utils import text_color, text_type
 maxDiffCharTax = 1 / 2.325
 
 df = pd.read_csv("./scraper/scraped_data/countries.csv")
+df_universities = pd.read_csv("./world_universities_ranking/university_rankings.csv")
 df_copy = df
 df["notes"] = ""
 
@@ -447,6 +448,18 @@ def pollution_func():
             ),
         )
 
+def get_rank(rank):
+    if '+' in rank:
+        return int(rank[0:rank.find('+')])
+    if "=" in rank:
+        return int(rank[1:])
+    elif '–' in rank:
+        r1 = int(rank[0:rank.find('–')])
+        r2 = int(rank[rank.find('–')+1:])
+        return (r1+r2)/2.0
+    elif rank.find('=') < 0 and rank.find('–')< 0:
+        return int(rank)
+    
 
 def cached_request(api_url):
     """Checks if the data for the url is in the dbm cache and returns the result.
@@ -508,22 +521,39 @@ if __name__ == "__main__":
         .dropna()
         .sort_values(by=["freedomhouse_score"], ascending=False)
     )
-
+    print_out_df_universities = (
+        df_universities[["rank", "name", "location"]]
+        .dropna()
+        .sort_values(by=["rank"], ascending=True)
+    )
     life_expectancy = []
     error_contries = []
+    universities = []
+    universities_rank = []
+    uni_countries = list(print_out_df_universities["location"])
+    uni_rankings = list(print_out_df_universities["rank"])
+    uni_unis = list(print_out_df_universities["name"])
     if not print_out_df.empty:
         countries = list(print_out_df["country"])
         for value in countries:
             api_url = get_url(value, YOUR_AGE, YOUR_GENDER)
             data = cached_request(api_url)
             try:
+                rankings = []
+                for i,country in enumerate(uni_countries):
+                    if country==value:
+                        rankings.append((get_rank(uni_rankings[i]), uni_unis[i], uni_rankings[i]))
+                rankings.sort()
                 total_years = int(YOUR_AGE) + data["remaining_life_expectancy"]
                 total_years = round(total_years, 2)
                 life_expectancy.append(total_years)
+                universities.append(rankings[0][1])
+                universities_rank.append(rankings[0][2])
             except KeyError:
                 error_contries.append(value)
                 life_expectancy.append(None)
-
+                universities.append(None)
+                universities_rank.append(None)
     if print_out_df.empty:
         print(
             text_color(
@@ -532,5 +562,7 @@ if __name__ == "__main__":
         )
     else:
         print_out_df["life expectancy"] = life_expectancy
+        print_out_df["universitiy"] = universities
+        print_out_df["ranking"] = universities_rank
         with pd.option_context("display.max_rows", None, "display.max_columns", None):
             print(text_color(print_out_df, text_type.ANSWER))
