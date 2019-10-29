@@ -16,7 +16,10 @@ class TrafficSpider(Spider):
     start_urls = ["https://www.tomtom.com/en_gb/traffic-index/ranking/"]
 
     def parse(self, response):
-        """Scrape a list of world rankings, cities, countries, and congestion levels, then populate an item with the data and return it."""
+        """
+        Scrape a list of world rankings, cities, countries, and congestion levels, 
+        then populate an item with the data and return it.
+        """
         # Base XPath for extract need values
         xpath_selector = "//div[@id='RankingPage-table']//td[{}]"
         world_ranks = response.xpath(xpath_selector.format(1)).getall()
