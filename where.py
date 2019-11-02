@@ -1,6 +1,7 @@
 """ TODO: add a propper docstring here to stop the build error"""
 import dbm
 import difflib
+import json
 from datetime import datetime
 
 import pandas as pd
@@ -29,8 +30,8 @@ displacement_dict = {
 
 
 def isSimilarTo(reference, model):
-    reference = reference.replace(' ', '')
-    model = model.replace(' ', '')
+    reference = reference.replace(" ", "")
+    model = model.replace(" ", "")
     distance = damerau_levenshtein_distance(model, reference) / len(reference)
     return distance <= maxDiffCharTax
 
@@ -40,7 +41,7 @@ def damerau_levenshtein_distance(s1, s2):
     d = {}
     lenstr1 = len(s1)
     lenstr2 = len(s2)
-    for i in range(-1, lenstr1+1):
+    for i in range(-1, lenstr1 + 1):
         d[(i, -1)] = i + 1
     for j in range(-1, lenstr2 + 1):
         d[(-1, j)] = j + 1
@@ -97,17 +98,17 @@ def run_country_checker():
             # print(text_color(error_str, text_type.WARNING))
             similarCountries = []
             for i in range(len(df)):
-                if(isSimilarTo(df['country'][i], country)):
-                    similarCountries.append(df['country'][i])
+                if isSimilarTo(df["country"][i], country):
+                    similarCountries.append(df["country"][i])
 
-            if(len(similarCountries) == 0):
+            if len(similarCountries) == 0:
                 message = f"'{country} is an invalid country. Please try again."
             else:
                 message = f"{country} is an invalid country. Did you mean "
 
             for i in range(len(similarCountries)):
                 message += f"{similarCountries[i]}"
-                if(i != len(similarCountries) - 1):
+                if i != len(similarCountries) - 1:
                     message += " or "
                 else:
                     message += "?"
@@ -450,28 +451,31 @@ def pollution_func():
 
 
 def get_rank(rank):
-    if '+' in rank:
-        return int(rank[0:rank.find('+')])
+    if "+" in rank:
+        return int(rank[0: rank.find("+")])
     if "=" in rank:
         return int(rank[1:])
-    elif '–' in rank:
-        r1 = int(rank[0:rank.find('–')])
-        r2 = int(rank[rank.find('–')+1:])
-        return (r1+r2)/2.0
-    elif rank.find('=') < 0 and rank.find('–') < 0:
+    elif "–" in rank:
+        r1 = int(rank[0: rank.find("–")])
+        r2 = int(rank[rank.find("–") + 1:])
+        return (r1 + r2) / 2.0
+    elif rank.find("=") < 0 and rank.find("–") < 0:
         return int(rank)
 
 
 def cached_request(api_url):
     """Checks if the data for the url is in the dbm cache and returns the result.
     If not, requests it, stores in the database and returns."""
+    with dbm.open("cache", "c") as db:
+        data = db.get(api_url, False)
 
-    db = dbm.open('cache.dbm', 'c')
-    data = db.get(api_url, False)
-    if not data:
+    if data:
+        data = json.loads(data)
+    else:
         response = requests.get(api_url)
         data = response.json()
-        db[api_url] = data
+        with dbm.open("cache", "c") as db:
+            db[api_url] = json.dumps(data)
     return data
 
 
@@ -543,7 +547,9 @@ if __name__ == "__main__":
                 rankings = []
                 for i, country in enumerate(uni_countries):
                     if country == value:
-                        rankings.append((get_rank(uni_rankings[i]), uni_unis[i], uni_rankings[i]))
+                        rankings.append(
+                            (get_rank(uni_rankings[i]), uni_unis[i], uni_rankings[i]),
+                        )
                 rankings.sort()
                 total_years = int(YOUR_AGE) + data["remaining_life_expectancy"]
                 total_years = round(total_years, 2)

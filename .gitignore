@@ -39,6 +39,8 @@ ENV/
 MANIFEST
 __pycache__/
 build/
+cache.db
+cache.dbm.db
 celerybeat-schedule
 coverage.xml
 db.sqlite3
