@@ -556,7 +556,7 @@ if __name__ == "__main__":
                 life_expectancy.append(total_years)
                 universities.append(rankings[0][1])
                 universities_rank.append(rankings[0][2])
-            except KeyError:
+            except (IndexError, KeyError):
                 error_contries.append(value)
                 life_expectancy.append(None)
                 universities.append(None)
@@ -568,6 +568,7 @@ if __name__ == "__main__":
             ),
         )
     else:
+        # TODO Fix error in life expectancy - ValueError: Length of values does not match length of index
         print_out_df["life expectancy"] = life_expectancy
         print_out_df["universitiy"] = universities
         print_out_df["ranking"] = universities_rank
