@@ -7,5 +7,7 @@
 4. Write your code
 5. Git add `modified or new files`
 6. [Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
-7. If you have imported new module consider using reorder-python-imports to reorder the imports. You can install it using `pip install reorder-python-imports`. You can read more about it [here](https://pypi.org/project/reorder-python-imports/)
+7. If you have imported new module consider using `isort` to reorder the imports.
+You can install it using `pip install isort`.
+You can read more about it [here](https://pypi.org/project/isort/)
 8. Send pull request
