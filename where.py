@@ -8,6 +8,8 @@ from utils import text_color, text_type
 
 
 class Index:
+    """[summary]"""
+
     __slots__ = ("name", "text", "value", "mood")
 
     def __init__(self, name=None, text=None, mood=None):
@@ -17,6 +19,12 @@ class Index:
 
 
 class Place2Live:
+    """[summary]
+
+    Returns:
+        [type] -- [description]
+    """
+
     countries_df = None
 
     default_values = {
@@ -44,6 +52,11 @@ class Place2Live:
     )
 
     def __init__(self, source_data_path=None):
+        """[summary]
+
+        Keyword Arguments:     source_data_path {[type]} --
+        [description] (default: {None})
+        """
         if source_data_path:
             # TODO: add file check and error handling
             self.countries_df = pd.read_csv(source_data_path)
@@ -55,6 +68,7 @@ class Place2Live:
             ]
 
     def start_dialog(self):
+        """[summary]"""
         for index in self.indexes_for_dialog:
             index.value = float(self.user_country[index.name])
             self.print_user_country_info(index)
@@ -94,9 +108,22 @@ class Place2Live:
                 return country_name
 
     def print_user_country_info(self, index):
+        """[summary]
+
+        Arguments:
+            index {[type]} -- [description]
+        """
         print(self.format_info(index.text, index.value))
 
     def ask_desired_index(self, index):
+        """[summary]
+
+        Arguments:
+            index {[type]} -- [description]
+
+        Returns:
+            [type] -- [description]
+        """
         question = self.format_question(
             index.text, self.max_min_index(index.name), index.mood,
         )
@@ -133,6 +160,15 @@ class Place2Live:
 
     @staticmethod
     def format_info(column_title, value):
+        """[summary]
+
+        Arguments:
+            column_title {[type]} -- [description]
+            value {[type]} -- [description]
+
+        Returns:
+            [type] -- [description]
+        """
         return text_color(
             f"In your country {column_title} is {value}", text_type.ANSWER,
         )
@@ -173,40 +209,42 @@ class Place2Live:
 
 
 if __name__ == "__main__":
-    place2live = Place2Live(
+    PLACE2LIVE = Place2Live(
         source_data_path="create_db/scraper/scraped_data/countries.csv",
     )
-    place2live.start_dialog()
-    df = place2live.countries_df
-    desired: Dict[str, float] = place2live.desired_indexes
+    PLACE2LIVE.start_dialog()
+    DF = PLACE2LIVE.countries_df
+    desired: Dict[str, float] = PLACE2LIVE.desired_indexes
 
-    out_df = df[
-        (df.purchasing_power_index > desired["purchasing_power_index"])
-        & (df.safety_index > desired["safety_index"])
-        & (df.health_care_index > desired["health_care_index"])
-        & (df.cost_of_living_index < desired["cost_of_living_index"])
+    OUT_DF = DF[
+        (DF.purchasing_power_index > desired["purchasing_power_index"])
+        & (DF.safety_index > desired["safety_index"])
+        & (DF.health_care_index > desired["health_care_index"])
+        & (DF.cost_of_living_index < desired["cost_of_living_index"])
         & (
-            df.property_price_to_income_ratio
+            DF.property_price_to_income_ratio
             < desired["property_price_to_income_ratio"]
         )
-        & (df.traffic_commute_time_index < desired["traffic_commute_time_index"])
-        & (df.pollution_index < desired["pollution_index"])
-        & (df.climate_index > desired["climate_index"])
+        & (DF.traffic_commute_time_index < desired["traffic_commute_time_index"])
+        & (DF.pollution_index < desired["pollution_index"])
+        & (DF.climate_index > desired["climate_index"])
     ]
 
-    print_out_df = (
-        out_df[["country", "freedomhouse_score", "quality_of_life_index"]]
+    PRINT_OUT_DF = (
+        OUT_DF[["country", "freedomhouse_score", "quality_of_life_index"]]
         .dropna()
         .sort_values(by=["freedomhouse_score"], ascending=False)
     )
 
-    if print_out_df.empty:
+    if PRINT_OUT_DF.empty:
         print(
             text_color(
-                f"There is no country better than {place2live.user_country_name}.",
+                "There is no country better than {}.".format(
+                    PLACE2LIVE.user_country_name
+                ),
                 text_type.ANSWER,
             ),
         )
     else:
         with pd.option_context("display.max_rows", None, "display.max_columns", None):
-            print(text_color(print_out_df.to_string(index=False), text_type.ANSWER))
+            print(text_color(PRINT_OUT_DF.to_string(index=False), text_type.ANSWER))
