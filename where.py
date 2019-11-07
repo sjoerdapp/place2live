@@ -1,3 +1,4 @@
+"""The script for analysis of the characteristics of different countries."""
 import difflib
 from typing import Dict
 
@@ -208,4 +209,4 @@ if __name__ == "__main__":
         )
     else:
         with pd.option_context("display.max_rows", None, "display.max_columns", None):
-            print(text_color(print_out_df, text_type.ANSWER))
+            print(text_color(print_out_df.to_string(index=False), text_type.ANSWER))
