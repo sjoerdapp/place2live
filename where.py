@@ -1,6 +1,8 @@
+import difflib
 from typing import Dict
 
 import pandas as pd
+
 from utils import text_color, text_type
 
 
@@ -57,8 +59,14 @@ class Place2Live:
             self.print_user_country_info(index)
             self.desired_indexes[index.name] = self.ask_desired_index(index)
 
+    def get_closest_country(self, country_name: str):
+        """This function finds the closest match for the country."""
+        countries = self.countries_df["country"].values.tolist()
+        closest_match = difflib.get_close_matches(country_name, countries)
+        return str(closest_match).strip("[]").replace(",", " or")
+
     def ask_user_country(self):
-        """Checks for a valid country by checking df"""
+        """Checks for a valid country by checking df."""
         while True:
             country_name = input(
                 text_color("What is your country? ", text_type.QUESTION),
@@ -71,12 +79,16 @@ class Place2Live:
                     ],
                 )
             except TypeError:
-                print(
-                    text_color(
-                        f"'{country_name}' is an invalid country. Please try again.",
-                        text_type.WARNING,
-                    ),
-                )
+                closest_country = self.get_closest_country(country_name)
+                error_str = f"{country_name} is an invalid country or did you mean {closest_country}. Please try again."
+
+                if not closest_country:
+                    error_str = (
+                        f"{country_name} is an invalid country name. Please try again."
+                    )
+
+                print(text_color(error_str, text_type.WARNING))
+
             else:
                 return country_name
 
@@ -104,7 +116,8 @@ class Place2Live:
             )
 
     def max_min_index(self, index_name):
-        """Return maximum and minimum value with country of a column from df."""
+        """Return maximum and minimum value with country of a column from
+        df."""
         country_and_name = self.countries_df[["country", index_name]]
         counrties_in_name_index = country_and_name.sort_values(index_name).dropna()
         min_value = [
@@ -125,10 +138,11 @@ class Place2Live:
 
     @staticmethod
     def format_question(name_index, max_min_value, mood):
-        """
-        Return a question that asks the user about the status of a factor
-        in his country, also displays the maximum and minimum value of this factor
-        in the world.
+        """Return a question that asks the user about the status of a factor in
+        his country.
+
+        Also displays the maximum and minimum value of this factor in
+        the world.
         """
 
         if mood == "lower is better":
@@ -149,7 +163,7 @@ class Place2Live:
 
     @staticmethod
     def is_float(index_input):
-        """Helper function to validate float values"""
+        """Helper function to validate float values."""
         try:
             float(index_input)
             return True
