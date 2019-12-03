@@ -1,4 +1,5 @@
 ![Alt text](./img/logo.jpg)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fserhii73%2Fplace2live.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fserhii73%2Fplace2live?ref=badge_shield)
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/serhii73/place2live/graphs/commit-activity)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
@@ -66,3 +67,7 @@ Contributions are always welcomed. :smiley:
 Feel free to raise new issues, file new PRs and star and fork this repo! :wink:
 
 To follow the guidelines, refer to [Contributing.md](CONTRIBUTING.md)
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fserhii73%2Fplace2live.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fserhii73%2Fplace2live?ref=badge_large)
